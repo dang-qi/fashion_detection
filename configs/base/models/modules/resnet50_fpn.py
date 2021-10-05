@@ -75,5 +75,7 @@ roi_net = dict(type='RoINet',
                nms_thresh=0.5,
                iou_low_thresh=0.5,
                iou_high_thresh=0.5,
-               class_num=46
+               class_num=46,
+               feature_names=['1','2','3','4'],
+               feature_strides=[4,8,16,32]
                )
