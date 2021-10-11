@@ -1,6 +1,4 @@
-import math
 
-from torchcore.dnn.networks.tools import box_coder, sampler
 model = dict(
      type = 'FasterRCNNFPN',
      backbone = dict(type='ResNet',
@@ -24,7 +22,6 @@ model = dict(
                     #strides=[4, 8, 16, 32, 64]),
                bbox_coder=dict(
                     type='AnchorBoxesCoder',
-                    box_code_clip=math.log(1000. / 16), 
                     weight=[1.0, 1.0, 1.0, 1.0]),
                sampler=dict(
                     type='PosNegSampler',

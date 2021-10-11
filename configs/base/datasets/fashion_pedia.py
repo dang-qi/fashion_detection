@@ -1,7 +1,7 @@
-from torchcore.data import sampler
-
 min_size=1024
 max_size=1024
+batch_size_per_gpu=2
+dataset_name='fashionpedia'
 train_transforms = [dict(type='RandomMirror',
                         probability=0.5, 
                         targets_box_keys=['boxes'], 
@@ -41,12 +41,13 @@ dataset_val = dict(
     add_mask=False
 )
 
+
 dataloader_train = dict(
     dataset=dataset_train,
-    #sampler=dict(
-    #    type='DistributedSampler'
-    #),
-    sampler=None,
+    sampler=dict(
+        type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
+        data_source=None # set data_source to None if the dataset want to be used here
+    ),
     collate=dict(
         type='CollateFnRCNN',
         min_size=min_size, 
@@ -55,20 +56,19 @@ dataloader_train = dict(
         image_std=None, 
         resized=True,
     ),
-    batch_size=2, 
-    shuffle=True, 
+    batch_size=batch_size_per_gpu, 
     batch_sampler=None, 
-    num_workers=0, 
+    num_workers=2, 
     pin_memory=False, 
     drop_last=False 
 )
 
 dataloader_val = dict(
     dataset=dataset_val,
-    #sampler=dict(
-    #    type='DistributedSampler'
-    #),
-    sampler=None,
+    sampler=dict(
+        type='SequentialSampler',
+        data_source=None # set data_source to None if the dataset want to be used here
+    ),
     collate=dict(
         type='CollateFnRCNN',
         min_size=min_size, 
@@ -77,10 +77,10 @@ dataloader_val = dict(
         image_std=None, 
         resized=False
     ),
-    batch_size=2, 
-    shuffle=True, 
+    batch_size=1, 
+    shuffle=False, 
     batch_sampler=None, 
-    num_workers=0, 
+    num_workers=2, 
     pin_memory=False, 
     drop_last=False 
 )
