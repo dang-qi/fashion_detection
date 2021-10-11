@@ -274,10 +274,11 @@ def run(args) :
     #cfg.build_path( params['tag'], args.dataset, model_hash='frcnn' )
     if rank == 0:
         print(cfg.pretty_text)
+    cfg.dump(cfg.path_config.config_path)
 
     #collate_fn_rcnn = CollateFnRCNN(min_size=416, max_size=416)
     train_dataset_loader = build_dataloader(cfg.dataloader_train, distributed)
-    val_dataset_loader = build_dataloader(cfg.dataloader_val,distributed)
+    val_dataset_loader = build_dataloader(cfg.dataloader_val,distributed=False)
 
 
     model = build_detector(cfg.model)
