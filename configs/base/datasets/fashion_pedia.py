@@ -80,7 +80,7 @@ dataloader_val = dict(
     batch_size=1, 
     shuffle=False, 
     batch_sampler=None, 
-    num_workers=2, 
+    num_workers=0, 
     pin_memory=False, 
     drop_last=False 
 )
