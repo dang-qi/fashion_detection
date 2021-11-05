@@ -15,10 +15,18 @@ trainer=dict(
         momentum=0.9,
         weight_decay=1e-4),
 
+    #scheduler = dict(
+    #    type = 'MultiStepLR',
+    #    #milestones = [8, 11], # infer from linear lr
+    #    gamma = 0.1)
     scheduler = dict(
-        type = 'MultiStepLR',
+        type = 'WarmupMultiStepLR',
         #milestones = [8, 11], # infer from linear lr
-        gamma = 0.1)
+        gamma=0.1,
+        warmup_factor=1.0 / 3,
+        warmup_iters=500,
+        warmup_method="linear",
+    )
 )
 
 lr_config=dict(

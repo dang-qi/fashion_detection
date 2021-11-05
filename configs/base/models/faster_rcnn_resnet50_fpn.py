@@ -4,6 +4,8 @@ model = dict(
      backbone = dict(type='ResNet',
                 depth=50,
                 returned_layers=[1,2,3,4],
+                norm_eval=True,
+                frozen_stage=1,
                 init_cfg=dict(type='pretrained')),
      neck = dict(type='FPN',
                in_channels_list=[256, 512, 1024, 2048],
