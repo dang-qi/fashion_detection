@@ -3,4 +3,11 @@ _base_=[
     '../base/models/fcos_resnet50_fpn.py',
     '../base/schedulers/scheduler_step_based_fcos_1x.py']
 
-model=dict(det_head=dict(head=dict(num_classes=80), num_class=80))
+model=dict(det_head=dict(head=dict(num_classes=80, center_with_cls=False), num_class=80))
+
+trainer = dict(evaluator=dict(dataset_name='coco'))
+
+lr_config=dict(
+    element_lr=0.01/16,
+    element_step=90000*16,
+    milestones_split=[2/3, 8/9])

@@ -17,14 +17,15 @@ model=dict(
                         norm_layer_cfg=dict(type="GN", num_groups=32),
                         strides=(8,16,32,64,128),
                         centerness=True,
-                        center_with_cls=True),
+                        center_with_cls=True,
+                        norm_on_bbox=True),
                num_class=46,
                regress_ranges=((-1, 64), (64, 128), (128, 256), (256, 512),
                                (512, INF)),
                strides=(8, 16, 32, 64, 128),
                center_sampling=False,
                center_sample_radius=1.5,
-               norm_on_bbox=False,
+               norm_on_bbox=True,
                centerness_on_reg=False,
                loss_cls=dict(
                    type='SigmoidFocalLoss',
@@ -32,7 +33,7 @@ model=dict(
                    alpha=0.25,
                    reduction='mean'
                    ),
-               loss_bbox=dict(type='IoULoss', loss_weight=1.0),
+               loss_bbox=dict(type='GIoULoss', loss_weight=1.0),
                loss_centerness=dict(
                    type='BCEWithLogitsLoss',
                    reduction='mean'
