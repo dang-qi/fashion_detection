@@ -6,6 +6,7 @@ trainer=dict(
     save_step_interval=10000,
     eval_step_interval=10000,
     accumulation_step=1,
+    clip_gradient=35,
     evaluator=dict(
         type='COCOEvaluator',
         dataset_name='fashionpedia'),
