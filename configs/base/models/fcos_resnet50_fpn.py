@@ -4,7 +4,7 @@ model=dict(
     backbone=dict(type='ResNet',
                 depth=50,
                 returned_layers=[1,2,3,4],
-                norm_layer_cfg=dict(type='BN', requires_grad=True),
+                norm_layer_cfg=dict(type='BN', requires_grad=False),
                 norm_eval=True,
                 frozen_stage=1,
                 init_cfg=dict(type='pretrained')),
