@@ -69,6 +69,7 @@ def parse_commandline():
     parser.add_argument('--evaluate',help='Do you just want to evaluate the model', action='store_true', required=False)
     #parser.add_argument('--dataset', help='The dataset we are going to use', default='coco_person')
     parser.add_argument('--linear_lr', help='do we change lr linearly according to batch size', action='store_true')
+    parser.add_argument('--api',help='api token for log', required=False, default=None)
     #parser.add_argument('--torchvision_model', help='Do we want to use torchvision model', action='store_true')
     #parser.add_argument('-g','--gpu',help='GPU Index', default='0')
     #parser.add_argument('--datasetpath',help='Path to the dataset',required=True)
@@ -251,12 +252,14 @@ def run(args) :
     config_path = args.config_path
     cfg = Config.fromfile(config_path)
     tag = args.tag
+    api_token = args.api
     batch_size_per_gpu_per_accumulation = args.batch_size
 
     project_path = os.path.expanduser('~/Vision/data')
     project_name = 'fcos'
     cfg.initialize_project(project_name, project_path, tag=tag)
     extra_init={}
+    extra_init['log_api_token'] = api_token
     cfg.merge_args( args )
     if args.linear_lr:
         extra_init = update_linear_lr(cfg.trainer, cfg.lr_config, world_batch_size)
