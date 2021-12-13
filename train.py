@@ -259,10 +259,10 @@ def run(args) :
     project_name = 'fcos'
     cfg.initialize_project(project_name, project_path, tag=tag)
     extra_init={}
-    extra_init['log_api_token'] = api_token
     cfg.merge_args( args )
     if args.linear_lr:
         extra_init = update_linear_lr(cfg.trainer, cfg.lr_config, world_batch_size)
+    extra_init['log_api_token'] = api_token
 
     #cfg.update_lr(world_batch_size)
     #cfg.resume = args.resume
