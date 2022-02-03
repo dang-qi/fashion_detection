@@ -1,9 +1,10 @@
 
 model = dict(
      type = 'FasterRCNNFPN',
-     backbone = dict(type='ResNet',
+     backbone=dict(type='ResNet',
                 depth=50,
                 returned_layers=[1,2,3,4],
+                norm_layer_cfg=dict(type='BN', requires_grad=False),
                 norm_eval=True,
                 frozen_stage=1,
                 init_cfg=dict(type='pretrained')),
@@ -25,12 +26,12 @@ model = dict(
                bbox_coder=dict(
                     type='AnchorBoxesCoder',
                     weight=[1.0, 1.0, 1.0, 1.0]),
-               sampler=dict(
-                    type='PosNegSampler',
-                    pos_sample_num=128,
-                    neg_sample_num=128),
                class_loss=dict(
-                    type='BCEWithLogitsLoss'),
+                    type='SigmoidFocalLoss',
+                    gamma=2.0,
+                    alpha=0.25,
+                    reduction='sum'
+                    ),
                box_loss=dict(
                     type='SmoothL1Loss', 
                     reduction='sum', 
