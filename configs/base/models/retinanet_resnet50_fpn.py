@@ -13,7 +13,7 @@ model = dict(
                in_channels_list=[0, 512, 1024, 2048],
                out_channels=256,
                extra_blocks='last_level_p6p7_on_c5',
-               relu_before_p7=True),
+               relu_before_p7=False),
      det_head = dict(type = 'RetinaNetHead',
                head = dict(
                     type='RetinaHead',
@@ -23,9 +23,13 @@ model = dict(
                anchor_generator=dict(
                     type='AnchorGenerator',
                     #sizes=((32,),(64,),(128,),(256,),(512,)),
-                    sizes = tuple((x, int(x * 2 ** (1.0 / 3)), int(x * 2 ** (2.0 / 3))) for x in [32, 64, 128, 256, 512]),
+                    #sizes = tuple((x, int(x * 2 ** (1.0 / 3)), int(x * 2 ** (2.0 / 3))) for x in [32, 64, 128, 256, 512]),
+                    sizes = tuple((x, float(x * 2 ** (1.0 / 3)), float(x * 2 ** (2.0 / 3))) for x in [32, 64, 128, 256, 512]),
                     #scales=[8],
-                    aspect_ratios=[0.5, 1.0, 2.0]),
+                    aspect_ratios=[0.5, 1.0, 2.0],
+                    strides=[8, 16, 32, 64, 128],
+                    round_anchor=False),
+
                     #strides=[4, 8, 16, 32, 64]),
                box_coder=dict(
                     type='AnchorBoxesCoder',
@@ -35,6 +39,14 @@ model = dict(
                     gamma=2.0,
                     alpha=0.25,
                     reduction='sum'
+                    ),
+               box_matcher=dict(
+                    type='MaxIoUBoxMatcher',
+                    high_thresh=0.5,
+                    low_thresh=0.4,
+                    allow_low_quality_match=True,
+                    assign_all_gt_max=True,
+                    keep_max_iou_in_low_quality=False
                     ),
                box_loss=dict(
                     type='L1Loss', 
