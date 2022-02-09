@@ -35,11 +35,17 @@ model = dict(
                     type='AnchorBoxesCoder',
                     weight=[1.0, 1.0, 1.0, 1.0]),
                class_loss=dict(
-                    type='SigmoidFocalLoss',
+                    type='MMFocalLoss',
+                    use_sigmoid=True,
                     gamma=2.0,
                     alpha=0.25,
-                    reduction='sum'
-                    ),
+                    loss_weight=1.0),
+               #class_loss=dict(
+               #     type='SigmoidFocalLoss',
+               #     gamma=2.0,
+               #     alpha=0.25,
+               #     reduction='sum'
+               #     ),
                box_matcher=dict(
                     type='MaxIoUBoxMatcher',
                     high_thresh=0.5,

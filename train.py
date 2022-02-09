@@ -256,7 +256,7 @@ def run(args) :
     batch_size_per_gpu_per_accumulation = args.batch_size
 
     project_path = os.path.expanduser('~/Vision/data')
-    project_name = 'fcos'
+    project_name = 'retinanet'
     cfg.initialize_project(project_name, project_path, tag=tag)
     extra_init={}
     cfg.merge_args( args )
@@ -305,6 +305,7 @@ def run(args) :
             trainset=train_dataset_loader,
             testset = val_dataset_loader,
             rank=rank,
+            world_size=world_size,
             path_config=cfg.path_config,
             tag=tag,
             evaluator=evaluator,

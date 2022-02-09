@@ -1,7 +1,7 @@
 trainer=dict(
     type='StepBasedTrainer',
-    log_print_iter=1000,
-    log_save_iter=50,
+    log_print_iter=1,
+    log_save_iter=1,
     log_with_tensorboard=True,
     save_step_interval=10000,
     eval_step_interval=10000,
@@ -34,5 +34,5 @@ trainer=dict(
 
 lr_config=dict(
     element_lr=0.01/16,
-    element_step=90000*16,
+    element_step=8,
     milestones_split=[2/3, 8/9])
