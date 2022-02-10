@@ -7,6 +7,8 @@ train_transforms = [] #[dict(type='RandomMirror',
                    #     targets_box_keys=['boxes'], 
                    #     mask_key=None),
                    # ]
+#train_transforms = [dict(type='Resize',
+#                         size=(800, 1333))]
 val_transforms = None
 dataset_train = dict(
     type='COCODataset',
@@ -18,7 +20,7 @@ dataset_train = dict(
     debug=False, 
     torchvision_format=False, 
     add_mask=False,
-    first_n_subset=4,
+    first_n_subset=13,
 )
 
 dataset_val = dict(
@@ -36,9 +38,19 @@ dataset_val = dict(
 
 dataloader_train = dict(
     dataset=dataset_train,
+    #sampler=dict(
+    #    type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
+    #    data_source=None # set data_source to None if the dataset want to be used here
+    #),
+    #sampler=dict(
+    #    type='SequentialSampler',
+    #    data_source=None # set data_source to None if the dataset want to be used here
+    #),
     sampler=dict(
-        type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
-        data_source=None # set data_source to None if the dataset want to be used here
+        type='GroupSampler',
+        data_source=None, # set data_source to None if the dataset want to be used here
+        num_per_gpu=batch_size_per_gpu,
+        shuffle=True,
     ),
     collate=dict(
         type='CollateFnRCNN',
