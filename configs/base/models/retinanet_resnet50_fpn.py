@@ -60,5 +60,6 @@ model = dict(
                     #beta= 1.0 / 9,
                nms_thresh=0.5,
                score_thresh=0.05,
+               before_nms_top_n_test=1000,
                ),
 )
