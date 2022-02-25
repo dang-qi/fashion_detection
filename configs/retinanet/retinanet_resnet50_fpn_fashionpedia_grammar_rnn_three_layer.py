@@ -1,6 +1,6 @@
 _base_=[
     '../base/datasets/fashion_pedia_frcnn.py',
-    '../base/models/retinanet_resnet50_fpn_rcnn_grammar.py',
+    '../base/models/retinanet_resnet50_fpn_rnn_grammar.py',
     '../base/schedulers/scheduler_step_based_retinanet_1x.py']
 
 model=dict(
