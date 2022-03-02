@@ -28,6 +28,7 @@ model=dict(
                center_sampling=False,
                center_sample_radius=1.5,
                norm_on_bbox=True,
+               enable_scale=True,
                loss_cls=dict(
                    type='SigmoidFocalLoss',
                    gamma=2.0,
