@@ -1,6 +1,7 @@
 INF=1000000
 grammar=[(4, 29), (10, 37), (10, 38), (10, 39), (10, 41), (10, 43), (10, 44)]
 init_parts = set(range(46))-set(sum(tuple(grammar),()))
+anchor_num=9
 model = dict(
      type = 'RetinaNet',
      backbone=dict(type='ResNet',
@@ -25,12 +26,12 @@ model = dict(
                               num_anchors=9, #should change if anchor generator change
                               num_classes=46),
                          rnn_cfg=dict(type='ConvRNN',
-                                      input_channel=5,
-                                      output_channel=5,
+                                      input_channel=5*anchor_num,
+                                      output_channel=5*anchor_num,
                                       conv_config=dict(
                                           type='Conv2d',
-                                          in_channels=5, 
-                                          out_channels=5, 
+                                          in_channels=5*anchor_num, 
+                                          out_channels=5*anchor_num, 
                                           kernel_size=3, 
                                           stride=1, 
                                           padding=1, 
@@ -39,8 +40,8 @@ model = dict(
                                           bias=True),
                                       post_net_conv_config=dict(
                                                         type='Conv2d',
-                                                        in_channels=5, 
-                                                        out_channels=5, 
+                                                        in_channels=5*anchor_num, 
+                                                        out_channels=5*anchor_num, 
                                                         kernel_size=3, 
                                                         stride=1, 
                                                         padding=1, 
@@ -50,7 +51,8 @@ model = dict(
                                                     )
                                       ), 
                          ref_scale_ind=0, 
-                         grammar=grammar
+                         grammar=grammar,
+                         anchor_num=anchor_num,
                     ),
                anchor_generator=dict(
                     type='AnchorGenerator',
