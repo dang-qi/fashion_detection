@@ -1,7 +1,8 @@
 INF=1000000
-grammar=[(4, 29), (10, 37), (10, 38), (10, 39), (10, 41), (10, 43), (10, 44)]
-init_parts = set(range(46))-set(sum(tuple(grammar),()))
 anchor_num=9
+grammar=[(4, 29), (10, 37), (10, 38), (10, 39), (10, 41), (10, 43), (10, 44)]
+exclude_parts = set([j*anchor_num+i for i in range(anchor_num) for j in set(sum(tuple(grammar),()))])
+init_parts = set(range(46*anchor_num))-exclude_parts
 model = dict(
      type = 'RetinaNet',
      backbone=dict(type='ResNet',
@@ -24,7 +25,8 @@ model = dict(
                               type='RetinaHead',
                               in_channels=256,
                               num_anchors=9, #should change if anchor generator change
-                              num_classes=46),
+                              num_classes=46,
+                              focal_loss_init_parts=init_parts),
                          rnn_cfg=dict(type='ConvRNN',
                                       input_channel=5*anchor_num,
                                       output_channel=5*anchor_num,
