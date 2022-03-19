@@ -56,6 +56,8 @@ from torchcore.dnn.networks.detectors.build import build_detector
 from torchcore.data.datasets.build import build_dataloader
 from torchcore.dnn.trainer.build import build_trainer
 
+from torchcore.dnn.networks.tools.load_from_mmdetection import load_mm_retinanet, load_mm_fcos
+
 def parse_commandline():
     parser = argparse.ArgumentParser(description="Training the Model")
     parser.add_argument('-c','--config_path',help='Configuration path', required=True)
@@ -70,6 +72,8 @@ def parse_commandline():
     #parser.add_argument('--dataset', help='The dataset we are going to use', default='coco_person')
     parser.add_argument('--linear_lr', help='do we change lr linearly according to batch size', action='store_true')
     parser.add_argument('--api',help='api token for log', required=False, default=None)
+    parser.add_argument('--load_from_mm_model', help='init weight from a mm detection model', action='store_true', required=False )
+    parser.add_argument('--load_from_mm_model_train', help='init weight from a mm detection model', action='store_true', required=False )
     #parser.add_argument('--torchvision_model', help='Do we want to use torchvision model', action='store_true')
     #parser.add_argument('-g','--gpu',help='GPU Index', default='0')
     #parser.add_argument('--datasetpath',help='Path to the dataset',required=True)
@@ -256,7 +260,7 @@ def run(args) :
     batch_size_per_gpu_per_accumulation = args.batch_size
 
     project_path = os.path.expanduser('~/Vision/data')
-    project_name = 'retinanet'
+    project_name = 'yolox'
     cfg.initialize_project(project_name, project_path, tag=tag)
     extra_init={}
     cfg.merge_args( args )
@@ -291,6 +295,12 @@ def run(args) :
 
 
     model = build_detector(cfg.model)
+    if hasattr(model, 'init_weights'):
+        model.init_weights()
+    if args.load_from_mm_model_train:
+        checkpoint=None
+        mm_config = 'mmconfigs/retinanet/retinanet_r50_fpn_1x_coco.py'
+        load_mm_retinanet(checkpoint, mm_config, model)
     model = model.to(rank)
     if world_size > 1:
         model = DDP(model, device_ids=[rank])
@@ -320,6 +330,12 @@ def run(args) :
     else:
         if args.load_model_path is not None:
             trainer.load_checkpoint(args.load_model_path, to_print=True)
+        if args.load_from_mm_model:
+            #checkpoint= 'retinanet_r50_fpn_1x_coco_20200130-c2398f9e.pth'
+            checkpoint= 'fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_1x_coco-0a0d75a8.pth'
+            #mm_config = 'mmconfigs/retinanet/retinanet_r50_fpn_1x_coco.py'
+            mm_config = 'mmconfigs/fcos/fcos_center-normbbox-centeronreg-giou_r50_caffe_fpn_gn-head_1x_coco.py'
+            load_mm_fcos(checkpoint, mm_config, trainer._model,change_backbone=True)
         trainer.validate()
 
 def cleanup():
