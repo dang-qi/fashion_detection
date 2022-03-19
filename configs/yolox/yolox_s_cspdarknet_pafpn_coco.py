@@ -13,7 +13,7 @@ model=dict(
 trainer = dict(
     evaluator=dict(dataset_name='coco'),
     use_amp=False,
-    log_print_iter=10,
+    log_print_iter=1000,
     scheduler=dict(iter_per_epoch=None))
 
 lr_config=dict(
@@ -36,5 +36,7 @@ train_transforms = [dict(type='RandomMirror',
                         box_inside=True, 
                         mask_key=None)
                     ]
-dataloader_train=dict(collate=dict(min_size=min_size, max_size=max_size))
+dataloader_train=dict(
+    collate=dict(min_size=min_size, max_size=max_size),
+    num_workers=0,)
 dataloader_val=dict(collate=dict(min_size=min_size, max_size=max_size))
