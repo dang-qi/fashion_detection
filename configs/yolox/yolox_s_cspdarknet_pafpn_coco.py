@@ -38,5 +38,5 @@ train_transforms = [dict(type='RandomMirror',
                     ]
 dataloader_train=dict(
     collate=dict(min_size=min_size, max_size=max_size),
-    num_workers=0,)
+    num_workers=2,)
 dataloader_val=dict(collate=dict(min_size=min_size, max_size=max_size))

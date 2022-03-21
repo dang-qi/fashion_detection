@@ -16,7 +16,7 @@ model=dict(
     )
 )
 
-trainer = dict(evaluator=dict(dataset_name='fashionpedia'))
+trainer = dict(evaluator=dict(dataset_name='fashionpedia'), clip_gradient=35)
 
 lr_config=dict(
     element_lr=0.01/16,
