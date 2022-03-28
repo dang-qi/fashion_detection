@@ -75,7 +75,8 @@ dataset_train = dict(
         xyxy=True, 
         debug=False, 
         torchvision_format=False, 
-        add_mask=False
+        add_mask=False,
+        first_n_subset=16*10,
     ),
     transforms=train_transforms
 )
@@ -89,7 +90,8 @@ dataset_val = dict(
     xyxy=True, 
     debug=False, 
     torchvision_format=False, 
-    add_mask=False
+    add_mask=False,
+    first_n_subset=10,
 )
 
 

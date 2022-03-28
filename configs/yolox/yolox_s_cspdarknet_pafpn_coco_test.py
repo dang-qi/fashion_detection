@@ -1,5 +1,5 @@
 _base_=[
-    '../base/datasets/coco_yolox.py',
+    '../base/datasets/coco_yolox_test.py',
     #'../base/datasets/coco.py',
     '../base/models/yolox_s_cspdarknet_pafpn.py',
     '../base/schedulers/scheduler_epoch_based_yolox.py']
@@ -16,8 +16,9 @@ trainer = dict(
     use_amp=True,
     ema_cfg=dict(decay=0.9999),
     log_print_iter=1000,
-    save_epoch_interval=10,
-    num_last_epoch=15,
+    eval_epoch_interval=300,
+    save_epoch_interval=100,
+    num_last_epoch=295,
     scheduler=dict(iter_per_epoch=None))
 
 lr_config=dict(
@@ -25,6 +26,5 @@ lr_config=dict(
 )
 
 dataloader_train = dict(
-    num_workers=0, 
-    persistent_workers=True,
+    num_workers=1, 
 )

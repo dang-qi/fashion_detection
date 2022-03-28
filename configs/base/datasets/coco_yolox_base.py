@@ -48,6 +48,7 @@ dataset_val = dict(
 
 dataloader_train = dict(
     dataset=dataset_train,
+    persistent_workers=True,
     sampler=dict(
         type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
         data_source=None # set data_source to None if the dataset want to be used here
