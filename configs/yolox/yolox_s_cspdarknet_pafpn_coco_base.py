@@ -1,5 +1,5 @@
 _base_=[
-    '../base/datasets/coco_yolox.py',
+    '../base/datasets/coco_yolox_base.py',
     #'../base/datasets/coco.py',
     '../base/models/yolox_s_cspdarknet_pafpn.py',
     '../base/schedulers/scheduler_epoch_based_yolox.py']
