@@ -3,6 +3,27 @@ max_size=640
 batch_size_per_gpu=2
 dataset_name='coco'
 train_single_transforms= None
+mix_up_transforms = [dict(type='ResizeMax',
+                          max_size=(min_size,min_size), #(h,w)
+                          ),
+                    dict(type='Padding',
+                        size=(min_size,min_size), # (h,w)
+                        pad_value=(114,114,114),
+                        ),
+                    dict(type='RandomMirror',
+                        probability=0.5, 
+                        targets_box_keys=['boxes'], 
+                        mask_key=None),
+                    dict(type='RandomAbsoluteScale',
+                        low=max_size/2,
+                        high=max_size*2,
+                        targets_box_keys=['boxes'], 
+                        mask_key=None),
+                    dict(type='RandomCrop',
+                        size=max_size,
+                        box_inside=True, 
+                        mask_key=None)
+                    ]
 train_transforms = [dict(type='Mosaic',
                         img_size=(min_size, min_size), # (h,w)
                         center_ratio_range=(0.5, 1.5),
@@ -16,6 +37,13 @@ train_transforms = [dict(type='Mosaic',
                         type='RandomAffine',
                         scaling_ratio_range=(0.1, 2),
                         border=(-min_size // 2, -min_size // 2)),
+                    dict(type='Resize',
+                        size=(min_size, min_size)),
+                    dict(type='MixUp',
+                        transforms=mix_up_transforms,
+                        min_bbox_size=5,
+                        min_area_ratio=0.2,
+                        max_aspect_ratio=20),
                     dict(type='HSVColorJittering',
                         h_range=5,
                         s_range=30,
@@ -24,8 +52,6 @@ train_transforms = [dict(type='Mosaic',
                         probability=0.5, 
                         targets_box_keys=['boxes'], 
                         mask_key=None),
-                    dict(type='Resize',
-                        size=(min_size, min_size))
 
                     #dict(type='RandomAbsoluteScale',
                     #    low=max_size/2,
