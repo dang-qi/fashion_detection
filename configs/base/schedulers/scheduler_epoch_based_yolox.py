@@ -1,5 +1,5 @@
 trainer=dict(
-    type='EpochBasedTrainer',
+    type='YOLOXEpochBasedTrainer',
     log_print_iter=1000,
     log_save_iter=50,
     max_epoch=300,

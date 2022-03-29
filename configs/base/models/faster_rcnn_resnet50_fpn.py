@@ -17,20 +17,22 @@ model = dict(
                     type='RPNHead',
                     in_channels=256),
                     #num_anchors=,),
+               sampler=dict(
+                    type='PosNegSampler',
+                    pos_sample_num=128,
+                    neg_sample_num=128,
+               ),
                anchor_generator=dict(
                     type='AnchorGenerator',
                     sizes=((32,),(64,),(128,),(256,),(512,)),
                     #scales=[8],
-                    aspect_ratios=[0.5, 1.0, 2.0]),
-                    #strides=[4, 8, 16, 32, 64]),
+                    aspect_ratios=[0.5, 1.0, 2.0],
+                    strides=[4, 8, 16, 32, 64]),
                bbox_coder=dict(
                     type='AnchorBoxesCoder',
                     weight=[1.0, 1.0, 1.0, 1.0]),
                class_loss=dict(
-                    type='SigmoidFocalLoss',
-                    gamma=2.0,
-                    alpha=0.25,
-                    reduction='sum'
+                    type='BCEWithLogitsLoss',
                     ),
                box_loss=dict(
                     type='SmoothL1Loss', 
@@ -78,7 +80,9 @@ model = dict(
                     iou_low_thresh=0.5,
                     iou_high_thresh=0.5,
                     class_num=46,
-                    feature_names=['1','2','3','4'],
+                    #feature_names=['1','2','3','4'],
+                    feature_names=[1,2,3,4],
+                    #feature_names=[2,3,4,'pool'],
                     feature_strides=[4,8,16,32]
                     )
 )
