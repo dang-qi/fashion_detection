@@ -231,10 +231,10 @@ def load_checkpoint(model, path, device, to_print=True):
 def update_linear_lr(trainer_cfg,lr_cfg, batch_size ):
     accumulation_step = trainer_cfg.accumulation_step
     lr = lr_cfg.element_lr * batch_size * accumulation_step
-    if trainer_cfg.type=='EpochBasedTrainer':
+    if 'EpochBasedTrainer' in trainer_cfg.type:
         trainer_cfg.optimizer.lr = lr
         return {}
-    elif trainer_cfg.type=='StepBasedTrainer':
+    elif 'StepBasedTrainer' in trainer_cfg.type:
         max_step = lr_cfg.element_step // batch_size
         milestones = [int(part*max_step) for part in lr_cfg.milestones_split]
         trainer_cfg.optimizer.lr = lr
@@ -323,7 +323,10 @@ def run(args) :
     ))
 
     if args.resume:
-        trainer.resume_training()
+        new_lr = None
+        if args.linear_lr:
+            new_lr = cfg.trainer.optimizer.lr
+        trainer.resume_training(new_lr=new_lr)
     #t = my_trainer( cfg, ddp_model, device, data_loader, testset=test_data_loader, dataset_name=args.dataset, train_sampler=dist_train_sampler, benchmark=None, tag=args.tag,evaluator=evaluator, epoch_based=False, eval_step_interval=10000, save_step_interval=10000, rank=rank )
     if not args.evaluate:
         trainer.train()
