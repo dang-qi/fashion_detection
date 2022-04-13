@@ -68,7 +68,7 @@ dataset_train = dict(
     type='MultiImageDataset',
     dataset_cfg=dict(
         type='COCODataset',
-        root='~/data/datasets/COCO', 
+        root='~/data/datasets/COCO/train2017', 
         anno= '~/data/annotations/coco2017_instances.pkl',
         part='train2017', 
         transforms=None, 
@@ -82,7 +82,7 @@ dataset_train = dict(
 
 dataset_val = dict(
     type='COCODataset',
-    root='~/data/datasets/COCO', 
+    root='~/data/datasets/COCO/val2017', 
     anno= '~/data/annotations/coco2017_instances.pkl',
     part='val2017', 
     transforms=val_transforms, 

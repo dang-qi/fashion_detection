@@ -1,49 +1,56 @@
-min_size=800
-max_size=1333
+min_size=1024
+max_size=1024
 batch_size_per_gpu=2
-dataset_name='coco'
+dataset_name='fashionpedia'
 train_transforms = [dict(type='RandomMirror',
                         probability=0.5, 
                         targets_box_keys=['boxes'], 
                         mask_key=None),
+                    dict(type='RandomAbsoluteScale',
+                        low=max_size/2,
+                        high=max_size*2,
+                        targets_box_keys=['boxes'], 
+                        mask_key=None),
+                    dict(type='RandomCrop',
+                        size=max_size,
+                        box_inside=True, 
+                        mask_key=None)
                     ]
 val_transforms = None
 dataset_train = dict(
-    type='COCODataset',
-    root='~/data/datasets/COCO/train2017', 
-    anno= '~/data/annotations/coco2017_instances.pkl',
-    part='train2017', 
+    type='FashionPediaDataset',
+    root='~/data/datasets/Fashionpedia/train', 
+    anno= '~/data/annotations/fashionpedia_instances_train.pkl',
+    part='train', 
     transforms=train_transforms, 
     xyxy=True, 
     debug=False, 
     torchvision_format=False, 
-    add_mask=False
+    add_mask=False,
+    sub_category=[14], # the  category id start from 1. For example 'shirt,blouse' => 1
+    map_id_to_continuous=True,
 )
 
 dataset_val = dict(
-    type='COCODataset',
-    root='~/data/datasets/COCO/val2017', 
-    anno= '~/data/annotations/coco2017_instances.pkl',
-    part='val2017', 
+    type='FashionPediaDataset',
+    root='~/data/datasets/Fashionpedia/test', 
+    anno= '~/data/annotations/fashionpedia_instances_val.pkl',
+    part='val', 
     transforms=val_transforms, 
     xyxy=True, 
     debug=False, 
     torchvision_format=False, 
-    add_mask=False
+    add_mask=False,
+    sub_category=[14],
+    map_id_to_continuous=True,
 )
 
 
 dataloader_train = dict(
     dataset=dataset_train,
-    #sampler=dict(
-    #    type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
-    #    data_source=None # set data_source to None if the dataset want to be used here
-    #),
     sampler=dict(
-        type='GroupSampler',
-        data_source=None, # set data_source to None if the dataset want to be used here
-        num_per_gpu=batch_size_per_gpu,
-        shuffle=True,
+        type='RandomSampler', # No need to use distributed sample here because the distributed sampler wrapper will be used in distributed situation
+        data_source=None # set data_source to None if the dataset want to be used here
     ),
     collate=dict(
         type='CollateFnRCNN',
@@ -51,7 +58,7 @@ dataloader_train = dict(
         max_size=max_size, 
         image_mean=None, 
         image_std=None, 
-        resized=False,
+        resized=True,
     ),
     batch_size=batch_size_per_gpu, 
     batch_sampler=None, 

@@ -10,7 +10,7 @@ train_transforms = [dict(type='RandomMirror',
 val_transforms = None
 dataset_train = dict(
     type='COCODataset',
-    root='~/data/datasets/COCO', 
+    root='~/data/datasets/COCO/train2017', 
     anno= '~/data/annotations/coco2017_instances.pkl',
     part='train2017', 
     transforms=train_transforms, 
@@ -23,7 +23,7 @@ dataset_train = dict(
 
 dataset_val = dict(
     type='COCODataset',
-    root='~/data/datasets/COCO', 
+    root='~/data/datasets/COCO/val2017', 
     anno= '~/data/annotations/coco2017_instances.pkl',
     part='val2017', 
     transforms=val_transforms, 

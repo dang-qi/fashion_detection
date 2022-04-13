@@ -10,7 +10,7 @@ train_transforms = [dict(type='RandomMirror',
 val_transforms = None
 dataset_train = dict(
     type='FashionPediaDataset',
-    root='~/data/datasets/Fashionpedia', 
+    root='~/data/datasets/Fashionpedia/train', 
     anno= '~/data/annotations/fashionpedia_instances_train.pkl',
     part='train', 
     transforms=train_transforms, 
@@ -22,7 +22,7 @@ dataset_train = dict(
 
 dataset_val = dict(
     type='FashionPediaDataset',
-    root='~/data/datasets/Fashionpedia', 
+    root='~/data/datasets/Fashionpedia/test', 
     anno= '~/data/annotations/fashionpedia_instances_val.pkl',
     part='val', 
     transforms=val_transforms, 
