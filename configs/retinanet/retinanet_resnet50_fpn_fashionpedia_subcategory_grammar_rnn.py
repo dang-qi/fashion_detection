@@ -22,6 +22,7 @@ model=dict(
                 num_layers=3,
             ),
             grammar=grammar,
+            subcategory=subcategory,
         ), 
     )
 )
