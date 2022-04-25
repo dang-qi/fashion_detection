@@ -27,7 +27,7 @@ dataset_train = dict(
     debug=False, 
     torchvision_format=False, 
     add_mask=False,
-    sub_category=[14], # the  category id start from 1. For example 'shirt,blouse' => 1
+    subcategory=[1,2,3,4,5,10,11,12, 32], # the  category id start from 1. For example 'shirt,blouse' => 1
     map_id_to_continuous=True,
 )
 
@@ -41,7 +41,7 @@ dataset_val = dict(
     debug=False, 
     torchvision_format=False, 
     add_mask=False,
-    sub_category=[14],
+    subcategory=[5,32], # jacket and sleeves
     map_id_to_continuous=True,
 )
 

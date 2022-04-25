@@ -4,7 +4,7 @@ model = dict(
      backbone=dict(type='ResNet',
                 depth=50,
                 returned_layers=[1,2,3,4],
-                norm_layer_cfg=dict(type='BN', requires_grad=False),
+                norm_layer_cfg=dict(type='BN', requires_grad=True),
                 norm_eval=True,
                 frozen_stage=1,
                 init_cfg=dict(type='pretrained')),
@@ -18,29 +18,40 @@ model = dict(
                     in_channels=256),
                     #num_anchors=,),
                sampler=dict(
-                    type='PosNegSampler',
-                    pos_sample_num=128,
-                    neg_sample_num=128,
+                    type='RandomSampler',
+                    total_num=256,
+                    pos_ratio=0.5,
+                    add_gt_as_sample=False,
                ),
                anchor_generator=dict(
                     type='AnchorGenerator',
                     sizes=((32,),(64,),(128,),(256,),(512,)),
                     #scales=[8],
+                    round_anchor=False,
                     aspect_ratios=[0.5, 1.0, 2.0],
                     strides=[4, 8, 16, 32, 64]),
                bbox_coder=dict(
                     type='AnchorBoxesCoder',
                     weight=[1.0, 1.0, 1.0, 1.0]),
+               box_matcher=dict(
+                    type='MaxIoUBoxMatcher',
+                    high_thresh=0.7, 
+                    low_thresh=0.3, 
+                    min_gt_ious=0.3,
+                    allow_low_quality_match=True, 
+                    assign_all_gt_max=True, 
+                    keep_max_iou_in_low_quality=False
+               ),
                class_loss=dict(
                     type='BCEWithLogitsLoss',
                     ),
                box_loss=dict(
-                    type='SmoothL1Loss', 
+                    type='L1Loss', 
                     reduction='sum', 
-                    beta= 1.0 / 9),
+                    ),
                nms_thresh=0.7,
                pre_nms_top_n_train = 2000,
-               post_nms_top_n_train = 2000,
+               post_nms_top_n_train = 1000,
                pre_nms_top_n_test = 1000,
                post_nms_top_n_test = 1000),
      roi_head = dict(type='RoINet',
@@ -52,9 +63,24 @@ model = dict(
                          out_feature_num=256
                     ),
                     sampler=dict(
-                         type='PosNegSampler',
-                         pos_sample_num=128,
-                         neg_sample_num=384),
+                         type='RandomSampler',
+                         total_num=512,
+                         pos_ratio=0.25,
+                         add_gt_as_sample=True,
+                    ),
+                    #sampler=dict(
+                    #     type='PosNegSampler',
+                    #     pos_sample_num=128,
+                    #     neg_sample_num=384),
+                    box_matcher=dict(
+                         type='MaxIoUBoxMatcher',
+                         high_thresh=0.5, 
+                         low_thresh=0.5, 
+                         min_gt_ious=0.5,
+                         allow_low_quality_match=False, 
+                         assign_all_gt_max=True, 
+                         keep_max_iou_in_low_quality=False
+                    ),
                     roi_extractor=dict(
                          type='RoiAliagnFPN',
                          pool_h=7,
@@ -67,9 +93,8 @@ model = dict(
                          weight=[10.0, 10.0, 5.0, 5.0]
                     ),
                     box_loss=dict(
-                         type='SmoothL1Loss',
+                         type='L1Loss',
                          reduction='sum', 
-                         beta= 1.0 / 9
                     ),
                     class_loss=dict(
                          type='CrossEntropyLoss',

@@ -236,9 +236,9 @@ def update_linear_lr(trainer_cfg,lr_cfg, batch_size ):
         return {}
     elif 'StepBasedTrainer' in trainer_cfg.type:
         max_step = lr_cfg.element_step // batch_size
-        milestones = [int(part*max_step) for part in lr_cfg.milestones_split]
+        #milestones = [int(part*max_step) for part in lr_cfg.milestones_split]
         trainer_cfg.optimizer.lr = lr
-        trainer_cfg.scheduler.milestones=milestones
+        #trainer_cfg.scheduler.milestones=milestones
         return dict(max_step=max_step)
     else:
         raise ValueError('Unknown trainer type: {}'.format(trainer_cfg.type))
@@ -260,7 +260,7 @@ def run(args) :
     batch_size_per_gpu_per_accumulation = args.batch_size
 
     project_path = os.path.expanduser('~/Vision/data')
-    project_name = 'yolox'
+    project_name = 'retinanet'
     cfg.initialize_project(project_name, project_path, tag=tag)
     extra_init={}
     cfg.merge_args( args )
