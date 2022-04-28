@@ -71,7 +71,6 @@ val_transforms = [dict(type='ResizeMax',
                         size=(min_size,min_size), # (h,w)
                         pad_value=(114,114,114),
                         ),]
-val_transforms = None
 dataset_train = dict(
     type='MultiImageDataset',
     dataset_cfg=dict(
