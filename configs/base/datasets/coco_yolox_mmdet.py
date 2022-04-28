@@ -6,14 +6,10 @@ train_single_transforms= None
 mix_up_transforms = [dict(type='ResizeMax',
                           max_size=(min_size,min_size), #(h,w)
                           ),
-                    dict(type='Padding',
-                        size=(min_size,min_size), # (h,w)
-                        pad_value=(114,114,114),
-                        ),
-                    dict(type='RandomMirror',
-                        probability=0.5, 
-                        targets_box_keys=['boxes'], 
-                        mask_key=None),
+                    #dict(type='Padding',
+                    #    size=(min_size,min_size), # (h,w)
+                    #    pad_value=(114,114,114),
+                    #    ),
                     dict(type='RandomAbsoluteScale',
                         low=max_size*0.8,
                         high=max_size*1.6,
@@ -22,7 +18,12 @@ mix_up_transforms = [dict(type='ResizeMax',
                     dict(type='RandomCrop',
                         size=max_size,
                         box_inside=True, 
-                        mask_key=None)
+                        mask_key=None,
+                        padding_value=114),
+                    dict(type='RandomMirror',
+                        probability=0.5, 
+                        targets_box_keys=['boxes'], 
+                        mask_key=None),
                     ]
 train_transforms = [dict(type='Mosaic',
                         img_size=(min_size, min_size), # (h,w)
@@ -65,7 +66,12 @@ train_transforms = [dict(type='Mosaic',
                     ]
 val_transforms = [dict(type='ResizeMax',
                           max_size=(min_size,min_size), #(h,w)
-                          ),]
+                          ),
+                  dict(type='Padding',
+                        size=(min_size,min_size), # (h,w)
+                        pad_value=(114,114,114),
+                        ),]
+val_transforms = None
 dataset_train = dict(
     type='MultiImageDataset',
     dataset_cfg=dict(
@@ -78,7 +84,8 @@ dataset_train = dict(
         debug=False, 
         torchvision_format=False, 
         add_mask=False,
-        backend='opencv'
+        backend='opencv',
+        RGB=False,
     ),
     transforms=train_transforms
 )
@@ -93,7 +100,8 @@ dataset_val = dict(
     debug=False, 
     torchvision_format=False, 
     add_mask=False,
-    backend='opencv'
+    backend='opencv',
+    RGB=False,
 )
 
 
