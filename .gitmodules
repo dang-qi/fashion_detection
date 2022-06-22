@@ -1,3 +1,3 @@
 [submodule "torchcore"]
 	path = torchcore
-	url = git@bitbucket.org:qidang/torchcore.git
+	url = git@github.com:dang-qi/torchcore.git
